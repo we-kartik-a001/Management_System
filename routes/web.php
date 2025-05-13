@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/', function(){ return view('welcome');});
 
 Route::get('/student',[StudentsController::class,'showForm'])->name('student.form');
 Route::post('/restricted',[StudentsController::class,'store'])->middleware('check.age')->name('student.checked');
