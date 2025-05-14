@@ -7,7 +7,7 @@ use App\Models\Teacher;
 
 // Request 
 use App\Http\Requests\TeacherStoreRequest;
-use App\Models\Course;
+
 // Repository
 use App\Repositories\CourseRepository;
 
@@ -15,11 +15,12 @@ use App\Repositories\CourseRepository;
 class TeachersController extends Controller
 {
     /**
-     * Disaply the number of teachers 
+     * Display the number of teachers 
      */
     public function index()
     {
         $teachers = Teacher::with('course')->paginate(10);
+
         return view('teacher.index.teacherIndex', compact('teachers'));
     }
 
@@ -56,6 +57,9 @@ class TeachersController extends Controller
         return view('teacher.edit.teacherEdit', compact('teacher', 'courses'));
     }
 
+    /**
+     * Update Teacher
+     */
     public function update(TeacherStoreRequest $request, Teacher $teacher)
     {
         $input = $request->validated();
@@ -65,6 +69,9 @@ class TeachersController extends Controller
         return redirect(route('teacher.edit', $teacher->id));
     }
 
+    /**
+     * Delete teacher
+     */
     public function delete(Teacher $teacher)
     {
         // dd($teacher);        
