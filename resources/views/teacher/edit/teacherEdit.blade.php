@@ -10,7 +10,7 @@
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <form method="POST" action="{{ route('teacher.update', $teacher->id ) }}" class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6">
+    <form method="POST" action="{{ route('teacher.update', $teacher->id ) }}" class="bg-white flex flex-col p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6">
         @csrf
         @method('PATCH')
 
@@ -76,6 +76,9 @@
                 class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">
             Submit
         </button>
+
+        <!-- Go back button -->
+        <a class="w-full bg-gray-800 border-2 rounded-lg p-3 text-center text-white font-semibold" href="{{ route('teacher.index') }}"> Goback</a>
     </form>
 </body>
 

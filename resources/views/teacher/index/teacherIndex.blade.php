@@ -4,65 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher List</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Teacher Form</title>
 </head>
 
-<body
-    class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen flex flex-col items-center p-5">
-    <div class="overflow-x-auto">
-        <table class="w-full table-auto border-collapse border border-gray-700 text-center">
-            <thead class="bg-gray-700 text-white">
-                <tr>
-                    <th class="border border-gray-600 px-4 py-2">ID</th>
-                    <th class="border border-gray-600 px-4 py-2">Name</th>
-                    <th class="border border-gray-600 px-4 py-2">Age</th>
-                    <th class="border border-gray-600 px-4 py-2">Course ID</th>
-                    <th class="border border-gray-600 px-4 py-2">Action</th>
-                </tr>
-            </thead>
+<body class="bg-white text-gray-800 min-h-screen py-10 px-3">
+    <div class="max-w-5xl mx-auto flex flex-col gap-4 ">
+        <h1 class="text-5xl font-bold text-center">Teacher List</h1>
 
-            <tbody class="bg-gray-900">
-                @foreach ($teachers as $teacher)
+            
+        <a class="border-2 bg-green-600 font-semibold text-xl text-white border-blue-800 rounded-lg p-3 text-center w-1/5 hover:bg-green-800 " href="{{route('teacher.create')}}">Add Teacher</a>
+
+        <div class="overflow-x-auto bg-white shadow rounded-lg border-2 border-blue-800">
+            <table class="min-w-full text-sm text-left border border-gray-200">
+                <thead class="bg-gray-100 text-gray-700">
                     <tr>
-                        <td class="border border-gray-600 px-4 py-2">{{ $teacher->id }}</td>
-                        <td class="border border-gray-600 px-4 py-2">{{ $teacher->name }}</td>
-                        <td class="border border-gray-600 px-4 py-2">{{ $teacher->age }}</td>
-                        <td class="border border-gray-600 px-4 py-2">{{ $teacher->courses_id }}</td>
-                        <!-- Edit Button -->
-                        <td class="border border-gray-600 px-4 py-2 flex justify-center gap-2">
-
+                        <th class="px-4 py-3 border-b">ID</th>
+                        <th class="px-4 py-3 border-b">Name</th>
+                        <th class="px-4 py-3 border-b">Age</th>
+                        <th class="px-4 py-3 border-b">Course</th>
+                        <th class="px-4 py-3 border-b text-center">Edit</th>
+                        <th class="px-4 py-3 border-b text-center">Delete</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 ">
+                    @foreach ($teachers as $teacher)
+                    <tr class="hover:bg-gray-200">
+                        <td class="px-4 py-2">{{ $teacher->id }}</td>
+                        <td class="px-4 py-2">{{ $teacher->name }}</td>
+                        <td class="px-4 py-2">{{ $teacher->age }}</td>
+                        <td class="px-4 py-2">{{ $teacher->course->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-2 text-center ">
                             <a href="{{ route('teacher.edit', $teacher->id) }}"
-                                class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
+                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
                                 Edit
                             </a>
-
-                            <form action="{{ route('teacher.delete', $teacher->id) }}" method="POST" onsubmit="return confirmDelete()">
+                        </td>
+                        <td>
+                            <form action="{{ route('teacher.delete', $teacher->id) }}" method="POST"
+                                class="inline-block"
+                                onsubmit="return confirm('Are you sure you want to delete this teacher?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition">
+                                <button type="submit"
+                                    class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
                                     Delete
                                 </button>
                             </form>
-
                         </td>
                     </tr>
-                @endforeach
-        </table>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
+        <!-- Pagination -->
+        <div class="mt-6 flex justify-center">
+            {{ $teachers->links('pagination::tailwind') }}
+        </div>
     </div>
-    <!-- Pagination -->
-    <div class="mt-4 flex justify-center">
-        {{ $teachers->links('pagination::tailwind') }}
-    </div>
-    </div>
-
-    <script>
-        function confirmDelete() {
-            return confirm("Are you sure you want to delete this student?");
-        }
-    </script>
-
 </body>
 
 </html>

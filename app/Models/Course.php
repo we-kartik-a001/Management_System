@@ -14,4 +14,9 @@ class Course extends Model
         'description',
         'duration',
     ];
+
+    public function teacher()
+    {
+        return $this->hasMany(Teacher::class);
+    }
 }

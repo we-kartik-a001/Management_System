@@ -14,4 +14,9 @@ class Teacher extends Model
         'age',
         'courses_id'
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'courses_id');
+    }
 }

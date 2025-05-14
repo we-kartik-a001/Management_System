@@ -7,7 +7,7 @@ use App\Models\Teacher;
 
 // Request 
 use App\Http\Requests\TeacherStoreRequest;
-
+use App\Models\Course;
 // Repository
 use App\Repositories\CourseRepository;
 
@@ -19,8 +19,7 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        $teachers = Teacher::paginate(10);
-
+        $teachers = Teacher::with('course')->paginate(10);
         return view('teacher.index.teacherIndex', compact('teachers'));
     }
 
@@ -43,11 +42,8 @@ class TeachersController extends Controller
 
         if ($input) {
             Teacher::create($input);
-
-            return redirect()->route('teacher.create');
-        } else {
-            return redirect()->route('teacher.index');
-        }
+        } 
+        return redirect()->route('teacher.index');
     }
 
     /**
