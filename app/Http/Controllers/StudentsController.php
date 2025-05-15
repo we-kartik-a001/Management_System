@@ -2,28 +2,40 @@
 
 namespace App\Http\Controllers;
 
-//Request
-use Illuminate\Http\Request;
-use App\Http\Requests\StudentRequest;
+//Models
 use App\Models\Student;
+
+//Request
+use App\Http\Requests\StudentRequest;
+
+//Repository
+use App\Repositories\CourseRepository;
+use App\Repositories\TeacherRepository;
 
 class StudentsController extends Controller
 {   
-    public function showForm()
+    public function index()
     {
-        return(view('student'));
+        return(view('student.index.studentIndex'));
+    }
+
+    // Create student
+    public function create()
+    {
+        $courses = (new CourseRepository)->pluckCoursesByNameAndId();
+
+        $teachers =(new TeacherRepository)->pluckTeachersByNameAndId();
+        
+        return(view('student.create.studentCreate',compact('courses','teachers')));
     }
 
     public function store(StudentRequest $request)
     {
         $input = $request->validated();
 
-        if($input)
-        {
-            Student::create($input);
+        Student::create($input);
 
-            return view('verify');
-        }
-        
+        return redirect(route('student.index'));
+
     }
 }

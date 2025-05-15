@@ -15,11 +15,12 @@ class CheckAge
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->age<18){
-            return redirect()->route('student.form')->withErrors([
-                'age' => 'You must be at least 18 years old to proceed.',
+        if($request->age<25 && $request->age>18){
+            return $next($request); // Allow the request to continue
+        }else{
+            return redirect()->route('student.create')->withErrors([
+                'age' => 'You must be at least 18 years old or less than 25 to proceed.',
             ]);
         }
-        return $next($request);
     }
 }
