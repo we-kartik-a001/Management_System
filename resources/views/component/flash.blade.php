@@ -6,7 +6,7 @@
 
 @if (Session::has('failure'))
     <div id="flash-message" class="text-white transition-opacity duration-500 ease-in-out">
-        <p class="inline-block p-2 bg-green-600 shadow rounded-lg">{{ Session::get('failure') }}</p>
+        <p class="inline-block p-2 bg-red-600 shadow rounded-lg">{{ Session::get('failure') }}</p>
     </div>
 @endif
 

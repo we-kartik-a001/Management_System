@@ -15,6 +15,11 @@ class Course extends Model
         'duration',
     ];
 
+    public function course()
+    {
+        return $this->belongsTo(CollegeStudent::class);
+    }
+
     public function teacher()
     {
         return $this->hasMany(Teacher::class);

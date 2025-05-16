@@ -1,11 +1,12 @@
 <?php
 
 //Request 
+
 use Symfony\Component\HttpFoundation\Request;
 
 //Controller 
 use App\Http\Controllers\SessionController;
-use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\CollegeStudentsController;
 use App\Http\Controllers\TeachersController;
 
 //Routes
@@ -29,9 +30,11 @@ Route::get('/', function () {
  * Student realted routes 
  */
 Route::prefix('student')->name('student.')->group(function () {
-     Route::get('/index', [StudentsController::class, 'index'])->name('index');
-    Route::get('/create', [StudentsController::class, 'create'])->name('create');
-    Route::post('/store', [StudentsController::class, 'store'])->middleware('check.age')->name('store');
+    Route::get('/index', [CollegeStudentsController::class, 'index'])->name('index');
+    Route::get('/create', [CollegeStudentsController::class, 'create'])->name('create');
+    // Route::post('/store', [CollegeStudentsController::class, 'store'])->middleware('check.age')->name('store');
+    Route::post('/store', [CollegeStudentsController::class, 'store'])->name('store');
+    Route::post('/students/{student}/teachers/{teacher}', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
 });
 
 /**

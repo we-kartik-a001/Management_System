@@ -15,8 +15,15 @@ class Teacher extends Model
         'courses_id'
     ];
 
+    // Each student belongs to particiular one course
     public function course()
     {
         return $this->belongsTo(Course::class, 'courses_id');
+    }
+
+    // Many teacher belongs to many college student
+    public function collegeStudents()
+    {
+        return $this->belongsToMany(CollegeStudent::class,'student_teachers','teachers_id','college_student_id');
     }
 }

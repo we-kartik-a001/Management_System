@@ -4,7 +4,11 @@
 
 @section('content')
 
-    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+
+        <div class="p-3">
+            <p class="text-center font-bold">@include('component.flash')</p>
+        </div>
 
         <form method="POST" action="{{ route('student.store') }}"
             class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6">
@@ -23,29 +27,31 @@
             </div>
 
             <div class="flex flex-col">
-                <label for="course_id" class="mb-2 text-gray-700">Enter Age:</label>
-                <select id="teacher_id" name="teacher_id" required class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <label for="courses_id" class="mb-2 text-gray-700">Enter Age:</label>
+                <select id="courses_id" name="courses_id" required
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <option value=""> Select course</option>
-                    @foreach ($courses as $id => $name )
-                     <option value="{{ $id }}"> {{$name}}</option>
+                    @foreach ($courses as $id => $name)
+                        <option value="{{ $id }}"> {{ $name }}</option>
                     @endforeach
                 </select>
 
-                @error('course_id')
+                @error('courses_id')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="flex flex-col">
-                <label for="teacher_id" class="mb-2 text-gray-700">Teacher Name:</label>
-                <select id="teacher_id" name="teacher_id" multiple required class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <label for="teachers_id" class="mb-2 text-gray-700">Teacher Name:</label>
+                <select id="teachers_id" name="teachers_id[]" multiple required
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <option value="">-- Select a Teachers---</option>
                     @foreach ($teachers as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                     @endforeach
                 </select>
 
-                @error('teacher_id')
+                @error('teachers_id')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                 @enderror
             </div>
