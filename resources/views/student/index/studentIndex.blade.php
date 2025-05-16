@@ -40,6 +40,7 @@
                                             method="POST" class="inline-block"
                                             onsubmit="return confirm('Are you sure you want to detach {{ $teacher->name }}?')">
                                             @csrf
+                                            
                                             <button type="submit" class="ml-2 text-red-500 hover:underline">Detach</button>
                                         </form><br>
                                     @empty
