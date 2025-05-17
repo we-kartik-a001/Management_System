@@ -8,8 +8,13 @@
 
         {{-- Student Index:Start  --}}
         <div class="max-w-5xl mx-auto flex flex-col gap-4 ">
-            <p class="text-center font-bold">@include('component.flash')</p>
-            <h1 class="text-5xl font-bold text-center">Student List</h1>
+            <div class="relative flex justify-between items-center ">
+                <div class="flex items-center">
+                    <h1 class="text-2xl lg:text-5xl font-bold">Student List</h1>
+                </div>
+                <p class="absolute right-0 font-bold">@include('component.flash')</p>
+            </div>
+            
             <div class="overflow-x-auto bg-white shadow rounded-lg border-2 border-blue-800">
                 <table class="min-w-full text-sm text-left border border-gray-200">
                     <thead class="bg-gray-100 text-gray-700">
@@ -18,10 +23,10 @@
                             <th class="px-4 py-3 border-b">Name</th>
                             <th class="px-4 py-3 border-b">Course</th>
                             <th class="px-4 py-3 border-b">Teacher</th>
-                            {{-- <th class="px-4 py-3 border-b">Detach course</th> --}}
+                            <th class="px-4 py-3 border-b">Detach course</th>
                             <th class="px-4 py-3 border-b">Detach Teacher</th>
-                            <th class="px-4 py-3 border-b text-center">Edit</th>
-                            <th class="px-4 py-3 border-b text-center">Delete</th>
+                            {{-- <th class="px-4 py-3 border-b text-center">Edit</th>
+                            <th class="px-4 py-3 border-b text-center">Delete</th> --}}
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 ">
@@ -29,24 +34,48 @@
                             <tr class="hover:bg-gray-200">
                                 <td class="px-4 py-2">{{ $student->id }}</td>
                                 <td class="px-4 py-2">{{ $student->name }}</td>
-                                <td class="px-4 py-2">{{ $student->course->name }}</td>
+                                <td class="px-4 py-2">{{ $student->course->name ?? 'N/A' }}</td>
                                 <td class="px-4 py-2">
                                     {{ $student->teachers->pluck('name')->join(', ') ?: 'N/A' }}
                                 </td>
-
                                 <td class="px-4 py-2">
+                                    <form action="{{ route('student.deleteCourse', $student->id) }}" method="POST"
+                                        onsubmit="return confirm('Are you sure you want to detach course from this student?')"
+                                        class="mt-2">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <form action="{{ route('student.detachTeacher', $student->id) }}" method="POST"
+                                        class="mt-2">
+                                        @csrf
+                                        <button type="submit"
+                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                                            Detach
+                                        </button>
+                                    </form>
+                                </td>
+
+
+                                {{-- <td class="px-4 py-2">
                                     @forelse ($student->teachers as $teacher)
-                                        <form action="{{ route('student.detachTeacher', [$student->id, $teacher->id]) }}"
+                                        <form
+                                            action="{{ route('student.detachTeacher', [$student->id, $student->teachers->id]) }}"
                                             method="POST" class="inline-block"
                                             onsubmit="return confirm('Are you sure you want to detach {{ $teacher->name }}?')">
                                             @csrf
-                                            
+
                                             <button type="submit" class="ml-2 text-red-500 hover:underline">Detach</button>
                                         </form><br>
                                     @empty
                                         N/A
                                     @endforelse
-                                </td>
+                                </td> --}}
 
 
                                 {{-- <td class="px-4 py-2 text-center ">

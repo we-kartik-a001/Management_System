@@ -7,7 +7,7 @@ use App\Models\CollegeStudent;
 
 //Request
 use App\Http\Requests\CollegeStudentRequest;
-use App\Models\Teacher;
+
 //Repository
 use App\Repositories\CourseRepository;
 use App\Repositories\TeacherRepository;
@@ -17,14 +17,26 @@ use Illuminate\Support\Facades\Session;
 
 class CollegeStudentsController extends Controller
 {
+    /**
+     * Show students 
+     */
     public function index()
     {
         $students = CollegeStudent::with('teachers', 'course')->paginate(10);
 
-        return (view('student.index.studentIndex', compact('students')));
+        if($students){
+           
+            return (view('student.index.studentIndex', compact('students')));
+        }else{
+            Session::flash('failure','There is some problem in fetching student data');
+
+            return redirect(route('main.welcome'));
+        }
     }
 
-    // Create student
+   /**
+    * Create Student
+    */
     public function create()
     {
         $courses = (new CourseRepository)->pluckCoursesByNameAndId();
@@ -34,12 +46,15 @@ class CollegeStudentsController extends Controller
         if ($courses && $teachers) {
             return (view('student.create.studentCreate', compact('courses', 'teachers')));
         } else {
-            Session::flash('failure', 'There is some problem in crea');
+            Session::flash('failure', 'There is some problem in creating student');
 
             return redirect(route('student.index'));
         }
     }
 
+    /**
+     *  Store student
+     */
     public function store(CollegeStudentRequest $request)
     {
         $inputs = $request->validated();
@@ -49,14 +64,13 @@ class CollegeStudentsController extends Controller
         unset($inputs['teachers_id']);
 
         if ($inputs) {
-
             Session::flash('success', 'The student created succesfully');
 
             $student = CollegeStudent::create($inputs);
 
             $student->teachers()->attach($teachers);
 
-            // $student->teachers()->detach($teachers);
+            // $student->teachers()->detach($teachers);-
 
             return redirect(route('student.index'));
         } else {
@@ -65,10 +79,25 @@ class CollegeStudentsController extends Controller
             return redirect(route('student.create'));
         }
     }
-    public function detachTeacher(CollegeStudent $student, Teacher $teacher)
-    {
-        $student->teachers()->detach($teacher->id);
 
-        return redirect()->back()->with('success', 'Teacher detached successfully.');
+    /**
+     * Detach the teacher from student
+     */
+    public function detachTeacher(CollegeStudent $student)
+    {
+        $student->teachers()->detach(); // Detaches all teachers
+        
+        return back()->with('success', 'All teachers detached from student.');
+    }
+
+    /**
+     * Delete the course of the student
+     */
+    public function deleteCourse(CollegeStudent $student)
+    {
+        $student->courses_id = null;  // Unlink the course
+        $student->save();
+
+        return back()->with('success', 'Course Deleted from the student.');
     }
 }

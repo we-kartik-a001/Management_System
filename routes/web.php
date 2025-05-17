@@ -22,9 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return view('welcome');})->name('main.welcome');
 
 /**
  * Student realted routes 
@@ -34,7 +32,8 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('/create', [CollegeStudentsController::class, 'create'])->name('create');
     // Route::post('/store', [CollegeStudentsController::class, 'store'])->middleware('check.age')->name('store');
     Route::post('/store', [CollegeStudentsController::class, 'store'])->name('store');
-    Route::post('/students/{student}/teachers/{teacher}', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
+    Route::post('/students/{student}/detachTeacher', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
+    Route::delete('/students/{student}/deleteCourse', [CollegeStudentsController::class, 'deleteCourse'])->name('deleteCourse');
 });
 
 /**
