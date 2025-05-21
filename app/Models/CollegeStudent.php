@@ -12,6 +12,7 @@ class CollegeStudent extends Model
     protected $fillable =[
         'name',
         'courses_id', 
+        'created_by'
     ];
 
     public function course()
@@ -23,5 +24,10 @@ class CollegeStudent extends Model
     public function teachers()
     {
         return $this->belongsToMany(Teacher::class,'student_teachers','college_student_id','teachers_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

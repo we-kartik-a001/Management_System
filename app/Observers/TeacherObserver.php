@@ -3,15 +3,18 @@
 namespace App\Observers;
 
 use App\Models\Teacher;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherObserver
 {
     /**
      * Handle the Teacher "created" event.
      */
-    public function created(Teacher $teacher): void
+    public function creating(Teacher $teacher): void
     {
-        //
+        if (Auth::check()) {
+        $teacher->created_by = Auth::id();
+    }
     }
 
     /**

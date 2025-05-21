@@ -31,7 +31,7 @@ class TeacherStoreRequest extends FormRequest
        return [
             'name'=> ['required','string','max:255'],
             'courses_id' => ['required', 'integer','exists:' . Course::class . ',id'],
-            'age'=>['required','integer','max:60'],
+            'age'=>['required','integer','min:18','max:60'],
         ];
     }
 }

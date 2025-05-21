@@ -22,7 +22,7 @@ class CollegeStudentsController extends Controller
      */
     public function index()
     {
-        $students = CollegeStudent::with('teachers', 'course')->paginate(10);
+        $students = CollegeStudent::with('teachers', 'course','creator')->paginate(10);
 
         if($students){
            
@@ -78,6 +78,13 @@ class CollegeStudentsController extends Controller
 
             return redirect(route('student.create'));
         }
+    }
+
+    public function update(CollegeStudentRequest $request)
+    {
+        $updates = $request->validated();
+
+        dd($updates);
     }
 
     /**

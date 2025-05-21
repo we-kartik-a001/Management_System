@@ -1,113 +1,131 @@
 @extends('component.tailwindLayout')
 
-@section('title', 'Teacher Editpage')
+@section('title', 'Student Management')
 
 @section('content')
 
-    <body class="bg-white text-gray-800 min-h-screen py-10 px-3">
+    <body class="bg-gray-50 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Flash Messages -->
+        <div class="max-w-7xl mx-auto">
+            @include('component.flash')
+        </div>
 
-        {{-- Student Index:Start  --}}
-        <div class="max-w-5xl mx-auto flex flex-col gap-4 ">
-            <div class="relative flex justify-between items-center ">
-                <div class="flex items-center">
-                    <h1 class="text-2xl lg:text-5xl font-bold">Student List</h1>
+        <!-- Main Content Container -->
+        <div class="max-w-7xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Page Header -->
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-800">Student Registry</h1>
+                        <p class="text-sm text-gray-600 mt-1">Manage all student records and course assignments</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <a href="{{ route('student.create') }}" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200 flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Student
+                        </a>
+                        <a href="{{ route('main.welcome') }}" 
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200 flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </div>
                 </div>
-                <p class="absolute right-0 font-bold">@include('component.flash')</p>
             </div>
-            
-            <div class="overflow-x-auto bg-white shadow rounded-lg border-2 border-blue-800">
-                <table class="min-w-full text-sm text-left border border-gray-200">
-                    <thead class="bg-gray-100 text-gray-700">
+
+            <!-- Student Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-3 border-b">ID</th>
-                            <th class="px-4 py-3 border-b">Name</th>
-                            <th class="px-4 py-3 border-b">Course</th>
-                            <th class="px-4 py-3 border-b">Teacher</th>
-                            <th class="px-4 py-3 border-b">Detach course</th>
-                            <th class="px-4 py-3 border-b">Detach Teacher</th>
-                            {{-- <th class="px-4 py-3 border-b text-center">Edit</th>
-                            <th class="px-4 py-3 border-b text-center">Delete</th> --}}
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instructor(s)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Record Creator</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 ">
+                    <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($students as $student)
-                            <tr class="hover:bg-gray-200">
-                                <td class="px-4 py-2">{{ $student->id }}</td>
-                                <td class="px-4 py-2">{{ $student->name }}</td>
-                                <td class="px-4 py-2">{{ $student->course->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-2">
-                                    {{ $student->teachers->pluck('name')->join(', ') ?: 'N/A' }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    <form action="{{ route('student.deleteCourse', $student->id) }}" method="POST"
-                                        onsubmit="return confirm('Are you sure you want to detach course from this student?')"
-                                        class="mt-2">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <form action="{{ route('student.detachTeacher', $student->id) }}" method="POST"
-                                        class="mt-2">
-                                        @csrf
-                                        <button type="submit"
-                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                                            Detach
-                                        </button>
-                                    </form>
-                                </td>
-
-
-                                {{-- <td class="px-4 py-2">
-                                    @forelse ($student->teachers as $teacher)
-                                        <form
-                                            action="{{ route('student.detachTeacher', [$student->id, $student->teachers->id]) }}"
-                                            method="POST" class="inline-block"
-                                            onsubmit="return confirm('Are you sure you want to detach {{ $teacher->name }}?')">
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $student->id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">{{ $student->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    @if($student->course)
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">{{ $student->course->name }}</span>
+                                        <form action="{{ route('student.deleteCourse', $student->id) }}" method="POST" class="ml-2">
                                             @csrf
-
-                                            <button type="submit" class="ml-2 text-red-500 hover:underline">Detach</button>
-                                        </form><br>
-                                    @empty
-                                        N/A
-                                    @endforelse
-                                </td> --}}
-
-
-                                {{-- <td class="px-4 py-2 text-center ">
-                                    <a href="{{ route('teacher.edit', $teacher->id) }}"
-                                        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
-                                        Edit
+                                            @method('DELETE')
+                                            <button type="submit" 
+                                                    class="text-red-500 hover:text-red-700 text-xs font-medium"
+                                                    onclick="return confirm('Remove this course assignment?')">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-gray-400">Not assigned</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @if($student->teachers->count() > 0)
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($student->teachers as $teacher)
+                                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded">{{ $teacher->name }}</span>
+                                        @endforeach
+                                        <form action="{{ route('student.detachTeacher', $student->id) }}" method="POST" class="ml-2">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="text-red-500 hover:text-red-700 text-xs font-medium"
+                                                    onclick="return confirm('Detach all instructors?')">
+                                                Detach
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <span class="text-gray-400">Not assigned</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->creator->name ?? 'System' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                {{-- <div class="flex justify-end space-x-2">
+                                    <a href="{{ route('student.edit', $student->id) }}" 
+                                        class="text-blue-600 hover:text-blue-900 transition-colors duration-200">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
                                     </a>
-                                </td>
-                                <td>
-                                    <form action="{{ route('teacher.delete', $teacher->id) }}" method="POST"
-                                        class="inline-block"
-                                        onsubmit="return confirm('Are you sure you want to delete this teacher?')">
+                                    <form action="{{ route('student.delete', $student->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                                            Delete
+                                        <button type="submit" 
+                                                class="text-red-600 hover:text-red-900 transition-colors duration-200"
+                                                onclick="return confirm('Permanently delete this student record?')">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
                                         </button>
                                     </form>
-                                </td> --}}
-                            </tr>
+                                </div> --}}
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+
             <!-- Pagination -->
-            <div class="mt-6 flex justify-center">
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
                 {{ $students->links('pagination::tailwind') }}
             </div>
         </div>
-        {{-- Student Index:End  --}}
-
     </body>
 
 @endsection

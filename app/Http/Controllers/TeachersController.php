@@ -11,6 +11,8 @@ use App\Http\Requests\TeacherStoreRequest;
 // Repository
 use App\Repositories\CourseRepository;
 
+//Session
+use Illuminate\Support\Facades\Session;
 
 class TeachersController extends Controller
 {
@@ -19,7 +21,7 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        $teachers = Teacher::with('course')->paginate(10);
+        $teachers = Teacher::with('course', 'creator')->paginate(10);
 
         return view('teacher.index.teacherIndex', compact('teachers'));
     }
@@ -42,8 +44,12 @@ class TeachersController extends Controller
         $input = $request->validated();
 
         if ($input) {
+            Session::flash('success', 'The Teacher created succesfully');
+
             Teacher::create($input);
-        } 
+        }else{
+             Session::flash('failure', 'The Teacher is not created succesfully');
+        }
         return redirect()->route('teacher.index');
     }
 
@@ -62,10 +68,14 @@ class TeachersController extends Controller
      */
     public function update(TeacherStoreRequest $request, Teacher $teacher)
     {
-        $input = $request->validated();
+        $update = $request->validated();
 
-        $teacher->update($input);
+        if ($update) {
+            Session::flash('success', 'The Teacher updated succesfully');
+            $teacher->update($update);
+        }
 
+        Session::flash('failure', 'The Teacher is not updated succesfully');
         return redirect(route('teacher.edit', $teacher->id));
     }
 

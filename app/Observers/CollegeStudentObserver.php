@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\CollegeStudent;
+use Illuminate\Support\Facades\Auth;
 
 class CollegeStudentObserver
 {
@@ -12,6 +13,13 @@ class CollegeStudentObserver
     public function created(CollegeStudent $collegeStudent): void
     {
         //
+    }
+
+    public function creating(CollegeStudent $collegeStudent): void
+    {
+        if (Auth::check()) {
+            $collegeStudent->created_by = Auth::id();
+        }
     }
 
     /**

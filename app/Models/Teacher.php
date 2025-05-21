@@ -12,7 +12,8 @@ class Teacher extends Model
     protected $fillable = [
         'name',
         'age',
-        'courses_id'
+        'courses_id',
+        'created_by'
     ];
 
     // Each student belongs to particiular one course
@@ -25,5 +26,10 @@ class Teacher extends Model
     public function collegeStudents()
     {
         return $this->belongsToMany(CollegeStudent::class,'student_teachers','teachers_id','college_student_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class,'created_by');
     }
 }
