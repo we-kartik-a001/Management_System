@@ -2,7 +2,15 @@
 
 namespace App\Providers;
 
+// Models
+use App\Models\CollegeStudent;
+
+// Observer
+use App\Observers\CollegeStudentObserver;
+
+//Support
 use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // CollegeStudent::observe(CollegeStudentObserver::class);
     }
 
     /**

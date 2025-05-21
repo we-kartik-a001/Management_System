@@ -22,86 +22,88 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () { return view('welcome');})->name('main.welcome');
+    /**
+     * Welcome blade
+     */
+    Route::get('/', function () { return view('welcome');})->middleware('auth')->name('main.welcome');
 
-/**
- * Student realted routes 
- */
-Route::prefix('student')->name('student.')->group(function () {
-    Route::get('/index', [CollegeStudentsController::class, 'index'])->name('index');
-    Route::get('/create', [CollegeStudentsController::class, 'create'])->name('create');
-    // Route::post('/store', [CollegeStudentsController::class, 'store'])->middleware('check.age')->name('store');
-    Route::post('/store', [CollegeStudentsController::class, 'store'])->name('store');
-    Route::post('/students/{student}/detachTeacher', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
-    Route::delete('/students/{student}/deleteCourse', [CollegeStudentsController::class, 'deleteCourse'])->name('deleteCourse');
-});
+    /**
+     * Student realted routes 
+     */
+    Route::prefix('student')->name('student.')->middleware('auth')->group(function () {
+        Route::get('/index', [CollegeStudentsController::class, 'index'])->name('index');
+        Route::get('/create', [CollegeStudentsController::class, 'create'])->name('create');
+        // Route::post('/store', [CollegeStudentsController::class, 'store'])->middleware('check.age')->name('store');
+        Route::post('/store', [CollegeStudentsController::class, 'store'])->name('store');
+        Route::post('/students/{student}/detachTeacher', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
+        Route::delete('/students/{student}/deleteCourse', [CollegeStudentsController::class, 'deleteCourse'])->name('deleteCourse');
+    });
 
-/**
- * Teacher realted routes 
- */
-Route::prefix('teacher')->name('teacher.')->group(function () {
-    Route::get('/index', [TeachersController::class, 'index'])->name('index');
-    Route::get('/create', [TeachersController::class, 'create'])->name('create');
-    Route::post('/store', [TeachersController::class, 'store'])->name('store');
-    Route::get('/{teacher}/edit', [TeachersController::class, 'edit'])->name('edit');
-    Route::patch('/{teacher}/update', [TeachersController::class, 'update'])->name('update');
-    Route::delete('/{teacher}/delete', [TeachersController::class, 'delete'])->name('delete');
-});
+    /**
+     * Teacher realted routes 
+     */
+    Route::prefix('teacher')->name('teacher.')->middleware('auth')->group(function () {
+        Route::get('/index', [TeachersController::class, 'index'])->name('index');
+        Route::get('/create', [TeachersController::class, 'create'])->name('create');
+        Route::post('/store', [TeachersController::class, 'store'])->name('store');
+        Route::get('/{teacher}/edit', [TeachersController::class, 'edit'])->name('edit');
+        Route::patch('/{teacher}/update', [TeachersController::class, 'update'])->name('update');
+        Route::delete('/{teacher}/delete', [TeachersController::class, 'delete'])->name('delete');
+    });
 
-/**
- * If we go this link we will get the session data
- */
-Route::get('get-all-session', function () {
+    /**
+     * verify blade related route
+     */
+    Route::prefix('session')->middleware('auth')->name('session.')->group(function () {
+        Route::get('/index', [SessionController::class, 'index'])->name('index');
+        Route::get('/create', [SessionController::class, 'createSession'])->name('create');
+        Route::post('/verifystore', [SessionController::class, 'storeInSession'])->name('store');
+        Route::post('/delete', [SessionController::class, 'deleteFromSession'])->name('delete');
+    });
 
-    $session = session()->all();
 
-    //Methods to get the data from the session 
+    /**
+     * If we go this link we will get the session data
+     */
+    Route::get('get-all-session', function () {
 
-    //M1
-    $username = session()->get('user_name');
-    $userid = session()->get('user_id');
+        $session = session()->all();
 
-    //M2
-    $UserName = session('user_name');
-    $UserId = session('user_id');
+        //Methods to get the data from the session 
 
-    // Print Session data
-    print_r($session);
-    print_r($username);
-    print_r($userid);
-    print_r($UserName);
-    print_r($UserId);
-});
+        //M1
+        $username = session()->get('user_name');
+        $userid = session()->get('user_id');
 
-/**
- * If we go this link then we are settting the data in the session 
- */
-Route::get('set-session', function (Request $request) {
-    $request->session()->put('user_name', 'Webreinvent Tech');
-    $request->session()->put('user_id', '1223');
+        //M2
+        $UserName = session('user_name');
+        $UserId = session('user_id');
 
-    return redirect('/get-all-session');
-});
+        // Print Session data
+        print_r($session);
+        print_r($username);
+        print_r($userid);
+        print_r($UserName);
+        print_r($UserId);
+    });
 
-/**
- * From here we are deleting the session
- */
-Route::get('destroy-session', function () {
-    session()->forget(['user_name', 'user_id', 'name']);
+    /**
+     * If we go this link then we are settting the data in the session 
+     */
+    Route::get('set-session', function (Request $request) {
+        $request->session()->put('user_name', 'Webreinvent Tech');
+        $request->session()->put('user_id', '1223');
 
-    return redirect('get-all-session');
-});
+        return redirect('/get-all-session');
+    });
 
-/**
- * verify blade related route
- */
-Route::prefix('session')->name('session.')->group(function () {
-    Route::get('/index', [SessionController::class, 'index'])->name('index');
-    Route::get('/create', [SessionController::class, 'createSession'])->name('create');
-    Route::post('/verifystore', [SessionController::class, 'storeInSession'])->name('store');
-    Route::post('/delete', [SessionController::class, 'deleteFromSession'])->name('delete');
-});
+    /**
+     * From here we are deleting the session
+     */
+    Route::get('destroy-session', function () {
+        session()->forget(['user_name', 'user_id', 'name']);
 
-/**
- * Add to cart related routes
- */
+        return redirect('get-all-session');
+    });
+
+require __DIR__ . '/auth.php';

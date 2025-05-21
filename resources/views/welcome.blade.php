@@ -4,46 +4,52 @@
 
 @section('content')
 
-    <body class="bg-gray-600 flex flex-col justify-center  gap-4 h-screen">
+<body class="bg-gradient-to-br from-gray-200 via-gray-600 to-gray-800 min-h-screen flex flex-col items-center justify-start py-8 px-4">
 
-        <div class="border-b flex justify-center items-center text-center max-w-5xl mx-auto">
-            <p class="text-3xl  font-semibold text-white p-3">Dashboard</p>
-        </div>
+    <!-- Header -->
+    <div class="border-b border-gray-600 w-full max-w-6xl mb-10">
+        <h1 class="text-4xl font-bold text-white text-center py-6">Admin Dashboard</h1>
+    </div>
 
-        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center p-4">
-            <!-- Card 1 -->
-            <div
-                class="bg-white rounded-2xl shadow-lg p-3 flex flex-col items-center w-48 hover:scale-105 transition-transform">
-                <img src="https://images.unsplash.com/photo-1587691592099-24045742c181?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Teacher" class="rounded-lg object-cover mb-4">
-                <a class="bg-blue-800 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow text-center w-full"
-                    href="{{ route('teacher.index') }}">
-                    Teachers Data
-                </a>
+    <!-- Cards Section -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
+
+        <!-- Card Component -->
+        @php
+            $cards = [
+                [
+                    'title' => 'Teachers Data',
+                    'route' => route('teacher.index'),
+                    'image' => 'https://images.unsplash.com/photo-1587691592099-24045742c181?q=80&w=2073&auto=format&fit=crop'
+                ],
+                [
+                    'title' => 'Session Data',
+                    'route' => route('session.create'),
+                    'image' => 'https://images.unsplash.com/photo-1587691592099-24045742c181?q=80&w=2073&auto=format&fit=crop'
+                ],
+                [
+                    'title' => 'Students Data',
+                    'route' => route('student.index'),
+                    'image' => 'https://images.unsplash.com/photo-1587691592099-24045742c181?q=80&w=2073&auto=format&fit=crop'
+                ],
+            ];
+        @endphp
+
+        @foreach ($cards as $card)
+            <div class="bg-white bg-opacity-10 backdrop-blur-xl rounded-2xl p-3 shadow-xl hover:shadow-2xl transition transform hover:-translate-y-2 border border-white/10">
+                <div class="flex flex-col items-center text-center">
+                    <img src="{{ $card['image'] }}" alt="{{ $card['title'] }}" class="rounded-lg mb-4 shadow-lg object-cover bg-white/20 ">
+                    <h5 class="text-xl text-white font-bold">{{ $card['title'] }}</h5>
+                    <a href="{{ $card['route'] }}" class="mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-xl transition">
+                        View
+                    </a>
+                </div>
             </div>
-
-            <!-- Card 2 -->
-            <div
-                class="bg-white rounded-2xl shadow-lg p-3 flex flex-col items-center w-48 hover:scale-105 transition-transform">
-                <img src="https://images.unsplash.com/photo-1587691592099-24045742c181?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Session" class="rounded-lg object-contain mb-4">
-                <a class="bg-blue-800 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow text-center w-full"
-                    href="{{ route('session.create') }}">
-                    Session Data
-                </a>
-            </div>
-
-            <!-- Card 3 -->
-            <div
-                class="bg-white rounded-2xl shadow-lg p-3 flex flex-col items-center w-48 hover:scale-105 transition-transform">
-                <img src="https://images.unsplash.com/photo-1587691592099-24045742c181?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Student" class="rounded-lg object-contain mb-4">
-                <a class="bg-blue-800 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow text-center w-full"
-                    href="{{ route('student.index') }}">
-                    Students Data
-                </a>
-            </div>
-        </div>
+        @endforeach
 
 
-    </body>
+    </div>
+
+</body>
 
 @endsection
