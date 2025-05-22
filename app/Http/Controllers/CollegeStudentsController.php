@@ -82,7 +82,6 @@ class CollegeStudentsController extends Controller
 
     public function edit(CollegeStudent $student)
     {
-        dd($student);
         $courses = (new CourseRepository)->pluckCoursesByNameAndId();
 
         $teachers = (new TeacherRepository)->pluckTeachersByNameAndId();
@@ -96,11 +95,32 @@ class CollegeStudentsController extends Controller
         }
     }
 
-    public function update(CollegeStudentRequest $request)
+    public function update(CollegeStudentRequest $request, CollegeStudent $student)
     {
         $updates = $request->validated();
 
-        dd($updates);
+        $teachers = $updates['teachers_id'];
+
+        unset($updates['teachers_id']);
+
+        $student->update($updates);
+
+        $student->teachers()->detach();
+        $student->teachers()->attach($teachers);
+
+        return redirect(route('student.edit', $student->id));
+    }
+
+     /**
+     * Delete teacher
+     */
+    public function delete(CollegeStudent $student)
+    {
+        // dd($teacher);        
+
+        $student->delete();
+
+        return redirect(route('student.index'));
     }
 
     /**

@@ -43,7 +43,9 @@ Route::prefix('student')->name('student.')->middleware('auth')->group(function (
     Route::post('/store', [CollegeStudentsController::class, 'store'])->name('store');
     Route::post('/students/{student}/detachTeacher', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
     Route::delete('/students/{student}/deleteCourse', [CollegeStudentsController::class, 'deleteCourse'])->name('deleteCourse');
-    Route::post('/edit/{$student}', [CollegeStudentsController::class, 'edit'])->name('edit');
+    Route::get('/{student}/edit', [CollegeStudentsController::class, 'edit'])->name('edit');
+    Route::patch('/{student}/update', [CollegeStudentsController::class, 'update'])->name('update');
+    Route::delete('/{student}/delete', [CollegeStudentsController::class, 'delete'])->name('delete');
 });
 
 /**

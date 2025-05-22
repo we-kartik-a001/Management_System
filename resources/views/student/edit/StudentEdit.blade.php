@@ -6,10 +6,10 @@
 
     <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-        {{-- action="{{ route('student.update', $student->id) }}" --}}
+
         {{-- Student Edit:Start --}}
-        <form method="POST" 
-            class="bg-white flex flex-col p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6">
+        <form method="POST" class="bg-white flex flex-col p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
+            action="{{ route('student.update', $student->id) }}">
             @csrf
             @method('PATCH')
 
@@ -49,7 +49,7 @@
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                 @enderror
             </div>
-            
+
             <!-- Teachers Selection -->
             <div>
                 <label for="teachers_id" class="block text-sm font-medium text-gray-700">
@@ -59,8 +59,9 @@
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     @foreach ($teachers as $id => $name)
                         <option value="{{ $id }}"
-                                {{ old('course_id', $student->teachers_id)== $id ? 'selected' : '' }}>
-                            {{ $name }}</option>
+                            {{ collect(old('teachers_id', $student->teachers->pluck('id')->toArray()))->contains($id) ? 'selected' : '' }}>
+                            {{ $name }}
+                        </option>
                     @endforeach
                 </select>
                 @error('teachers_id')
@@ -79,6 +80,19 @@
                 href="{{ route('student.index') }}"> Goback</a>
         </form>
         {{-- Student Edit:End --}}
-
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                new TomSelect("#teachers_id", {
+                    maxItems: null, // multiple selection
+                    plugins: ['remove_button'], // add a remove button on selected items
+                    create: false,
+                    persist: false,
+                    placeholder: "Select or search teachers...",
+                    onInitialize: function() {
+                        console.log('Tom Select initialized for teachers');
+                    }
+                });
+            });
+        </script>
     </body>
 @endsection
