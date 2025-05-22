@@ -30,6 +30,7 @@ class TeacherStoreRequest extends FormRequest
     {
        return [
             'name'=> ['required','string','max:255'],
+            'email'=> ['required','email'],
             'courses_id' => ['required', 'integer','exists:' . Course::class . ',id'],
             'age'=>['required','integer','min:18','max:60'],
         ];

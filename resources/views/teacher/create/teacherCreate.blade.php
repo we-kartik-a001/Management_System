@@ -27,6 +27,19 @@
             @enderror
         </div>
 
+         <!-- Teacher Email -->
+        <div class="flex flex-col">
+            <label for="email" class="mb-2 text-sm font-medium text-gray-700">
+                Email
+            </label>
+            <input type="text" name="email" id="email" required
+                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter teacher's email">
+            @error('email')
+                <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+
         <!-- Course Selection -->
         <div class="flex flex-col">
             <label for="courses_id" class="mb-2 text-sm font-medium text-gray-700">

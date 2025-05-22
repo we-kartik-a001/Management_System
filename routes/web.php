@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\CollegeStudentsController;
 use App\Http\Controllers\TeachersController;
+use App\Jobs\Translate;
 use App\Models\CollegeStudent;
 use App\Models\Teacher;
 //Routes
@@ -29,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $college_students = CollegeStudent::get();
     $teachers = Teacher::get();
-    return view('welcome', compact('college_students','teachers'));
+    return view('welcome', compact('college_students', 'teachers'));
 })->middleware('auth')->name('main.welcome');
 
 /**
@@ -42,6 +43,7 @@ Route::prefix('student')->name('student.')->middleware('auth')->group(function (
     Route::post('/store', [CollegeStudentsController::class, 'store'])->name('store');
     Route::post('/students/{student}/detachTeacher', [CollegeStudentsController::class, 'detachTeacher'])->name('detachTeacher');
     Route::delete('/students/{student}/deleteCourse', [CollegeStudentsController::class, 'deleteCourse'])->name('deleteCourse');
+    Route::post('/edit/{$student}', [CollegeStudentsController::class, 'edit'])->name('edit');
 });
 
 /**
@@ -109,6 +111,14 @@ Route::get('destroy-session', function () {
     session()->forget(['user_name', 'user_id', 'name']);
 
     return redirect('get-all-session');
+});
+
+Route::get('test', function () {
+
+    $teachers = Teacher::first();
+    Translate::dispatch($teachers);
+
+    return 'Done';
 });
 
 require __DIR__ . '/auth.php';

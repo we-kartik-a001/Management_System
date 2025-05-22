@@ -11,6 +11,7 @@ class Teacher extends Model
 
     protected $fillable = [
         'name',
+        'email',
         'age',
         'courses_id',
         'created_by'

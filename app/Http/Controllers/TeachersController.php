@@ -14,6 +14,10 @@ use App\Repositories\CourseRepository;
 //Session
 use Illuminate\Support\Facades\Session;
 
+// Mail
+use App\Mail\SchoolInfo;
+use Illuminate\Support\Facades\Mail;
+
 class TeachersController extends Controller
 {
     /**
@@ -42,11 +46,15 @@ class TeachersController extends Controller
     public function store(TeacherStoreRequest $request)
     {
         $input = $request->validated();
+        // dd($input);
 
         if ($input) {
             Session::flash('success', 'The Teacher created succesfully');
 
-            Teacher::create($input);
+            $teachers=  Teacher::create($input);
+
+            Mail::to($teachers->email)->send(new SchoolInfo($teachers));
+
         }else{
              Session::flash('failure', 'The Teacher is not created succesfully');
         }
