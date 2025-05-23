@@ -4,7 +4,12 @@
 
 @section('content')
 
-    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+
+        <!-- Flash Messages -->
+        <div class="max-w-7xl mx-auto">
+            @include('component.flash')
+        </div>
 
         {{-- Teacher Edit:Start --}}
         <form method="POST" action="{{ route('teacher.update', $teacher->id) }}"
@@ -23,6 +28,19 @@
 
                 @error('name')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <!-- Teacher Email -->
+            <div class="flex flex-col">
+                <label for="email" class="mb-2 text-sm font-medium text-gray-700">
+                    Email
+                </label>
+                <input type="text" name="email" id="email" required
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter teacher's email" value="{{ old('email', $teacher->email) }}">
+                @error('email')
+                    <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
                 @enderror
             </div>
 
@@ -49,15 +67,16 @@
                 @enderror
             </div>
 
-            {{-- Age --}}
+            <!-- Date Of birth -->
             <div class="flex flex-col">
-                <label for="age" class="mb-2 text-gray-700">Enter Age:</label>
-                <input type="number" name="age" id="age" required
-                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value="{{ old('age', $teacher->age) }}">
-
-                @error('age')
-                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                <label for="date_of_birth" class="mb-2 text-sm font-medium text-gray-700">
+                    Date of Birth
+                </label>
+                <input type="date" name="date_of_birth" id="date_of_birth" min="1900-01-01" max="2030-01-01" required
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value="{{ old('date_of_birth', $teacher->date_of_birth) }}">
+                @error('date_of_birth')
+                    <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
                 @enderror
             </div>
 
@@ -72,6 +91,6 @@
                 href="{{ route('teacher.index') }}"> Goback</a>
         </form>
         {{-- Teacher Edit:End --}}
-        
+
     </body>
 @endsection

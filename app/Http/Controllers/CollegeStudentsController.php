@@ -70,11 +70,9 @@ class CollegeStudentsController extends Controller
 
             $student->teachers()->attach($teachers);
 
-            // $student->teachers()->detach($teachers);-
-
             return redirect(route('student.index'));
         } else {
-            Session::flash('failure', 'The student not create due to error');
+            Session::flash('failure', 'There is a problem in creating the student');
 
             return redirect(route('student.create'));
         }
@@ -87,7 +85,7 @@ class CollegeStudentsController extends Controller
         $teachers = (new TeacherRepository)->pluckTeachersByNameAndId();
 
         if ($courses && $teachers) {
-            return (view('student.edit.StudentEdit', compact('student','courses', 'teachers')));
+            return (view('student.edit.StudentEdit', compact('student', 'courses', 'teachers')));
         } else {
             Session::flash('failure', 'There is some problem in creating student');
 
@@ -103,21 +101,28 @@ class CollegeStudentsController extends Controller
 
         unset($updates['teachers_id']);
 
-        $student->update($updates);
+        if ($updates && $teachers) {
 
-        $student->teachers()->detach();
-        $student->teachers()->attach($teachers);
+            Session::flash('success','Student has been updated successfully');
+
+            $student->update($updates);
+
+            $student->teachers()->detach();
+
+            $student->teachers()->attach($teachers);
+
+        }else{
+             Session::flash('success','Error in updating the student');
+        }
 
         return redirect(route('student.edit', $student->id));
     }
 
-     /**
+    /**
      * Delete teacher
      */
     public function delete(CollegeStudent $student)
-    {
-        // dd($teacher);        
-
+    {        
         $student->delete();
 
         return redirect(route('student.index'));
@@ -128,7 +133,7 @@ class CollegeStudentsController extends Controller
      */
     public function detachTeacher(CollegeStudent $student)
     {
-        $student->teachers()->detach(); // Detaches all teachers
+        $student->teachers()->detach();
 
         return back()->with('success', 'All teachers detached from student.');
     }

@@ -32,7 +32,7 @@ class TeacherStoreRequest extends FormRequest
             'name'=> ['required','string','max:255'],
             'email'=> ['required','email'],
             'courses_id' => ['required', 'integer','exists:' . Course::class . ',id'],
-            'age'=>['required','integer','min:18','max:60'],
+            'date_of_birth' => ['required', 'date', 'after_or_equal:1900-01-01', 'before_or_equal:2024-06-10'],
         ];
     }
 }

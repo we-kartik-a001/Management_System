@@ -4,8 +4,12 @@
 
 @section('content')
 
-    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-
+    <body class="bg-gray-100 flex  flex-col items-center justify-center min-h-screen">
+        
+        <!-- Flash Messages -->
+        <div class="max-w-7xl mx-auto">
+            @include('component.flash')
+        </div>
 
         {{-- Student Edit:Start --}}
         <form method="POST" class="bg-white flex flex-col p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"

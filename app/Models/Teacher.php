@@ -12,13 +12,13 @@ class Teacher extends Model
     protected $fillable = [
         'name',
         'email',
-        'age',
+        'date_of_birth',
         'courses_id',
         'created_by'
     ];
 
     // Each student belongs to particiular one course
-    public function course()
+    public function courses()
     {
         return $this->belongsTo(Course::class, 'courses_id');
     }
@@ -26,11 +26,29 @@ class Teacher extends Model
     // Many teacher belongs to many college student
     public function collegeStudents()
     {
-        return $this->belongsToMany(CollegeStudent::class,'student_teachers','teachers_id','college_student_id');
+        return $this->belongsToMany(CollegeStudent::class, 'student_teachers', 'teachers_id', 'college_student_id');
     }
 
+    // User which created the teacher
     public function creator()
     {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    // mutator
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucwords($value);
+    }
+
+    // accessor
+    public function getDateOfBirthAttribute($value)
+    {
+        return date("d-M-Y", strtotime($value));
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class, 'teachers__subjects', 'teacher_id', 'subject_id');
     }
 }
