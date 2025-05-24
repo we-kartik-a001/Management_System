@@ -7,10 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 //Controller 
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\CollegeStudentsController;
+use App\Http\Controllers\CourseSubjectController;
 use App\Http\Controllers\TeachersController;
 use App\Jobs\Translate;
 use App\Models\CollegeStudent;
+use App\Models\Course;
 use App\Models\Teacher;
+
 //Routes
 use Illuminate\Support\Facades\Route;
 /*
@@ -30,7 +33,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $college_students = CollegeStudent::get();
     $teachers = Teacher::get();
-    return view('welcome', compact('college_students', 'teachers'));
+    $courses = Course::get();
+    return view('welcome', compact('college_students', 'teachers', 'courses'));
 })->middleware('auth')->name('main.welcome');
 
 /**
@@ -70,6 +74,7 @@ Route::prefix('session')->middleware('auth')->name('session.')->group(function (
     Route::post('/delete', [SessionController::class, 'deleteFromSession'])->name('delete');
 });
 
+Route::get('course/index',[CourseSubjectController::class, 'index'])->name('course.index');
 
 /**
  * If we go this link we will get the session data

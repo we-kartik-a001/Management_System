@@ -13,6 +13,8 @@
 
     <!-- Tailwind CSS CDN (you can replace this with Laravel Mix or Vite if needed) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+
 </head>
 
 <!-- Main Content -->

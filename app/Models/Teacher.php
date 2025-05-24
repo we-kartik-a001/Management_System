@@ -47,8 +47,9 @@ class Teacher extends Model
         return date("d-M-Y", strtotime($value));
     }
 
+    // teacher can have multiple subjects
     public function subjects()
     {
-        return $this->hasMany(Subject::class, 'teachers__subjects', 'teacher_id', 'subject_id');
+        return $this->belongsToMany(Subject::class, 'teacher_subjects', 'teacher_id', 'subject_id');
     }
 }

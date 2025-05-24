@@ -15,14 +15,19 @@ class Subject extends Model
         'description'
     ];
 
-
-    public function course()
+    /**
+     * Subject belongs to many courses
+     */
+    public function courses()
     {
-        return $this->hasMany(Subject::class,'courses_subjects','subject_id','course_id ');
+        return $this->belongsToMany(Course::class, 'courses_subjects', 'subject_id', 'course_id');
     }
     
+    /**
+     * subject bleongs to many teachers
+     */
     public function teacher()
     {
-         return $this->belongsToMany(Teacher::class,'courses_subjects','subject_id','course_id ',);
+         return $this->belongsToMany(Teacher::class,'teacher_subjects','subject_id','teacher_id ',);
     }
 }

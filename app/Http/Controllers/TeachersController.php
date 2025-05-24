@@ -26,25 +26,11 @@ class TeachersController extends Controller
     /**
      * Display the number of teachers 
      */
-    public function index(Request $request)
+    public function index()
     {
-        $selectedCourseId = $request->input('course_id');
+        $teachers = Teacher::with('courses', 'creator')->paginate(10);
 
-        // Get teachers with relations (if needed)
-        $teachers = Teacher::with('courses', 'creator', 'subjects')->paginate(10);
-
-        // Get all courses for dropdown
-        $courses = Course::all();
-
-        // Get subjects related to selected course
-        $subjects = collect();
-        if ($selectedCourseId) {
-            $subjects = Subject::whereHas('courses', function ($q) use ($selectedCourseId) {
-                $q->where('courses.id', $selectedCourseId);
-            })->get();
-        }
-
-        return view('teacher.index.teacherIndex', compact('teachers', 'courses', 'subjects', 'selectedCourseId'));
+        return view('teacher.index.teacherIndex', compact('teachers'));
     }
 
     /**
@@ -52,11 +38,11 @@ class TeachersController extends Controller
      */
     public function create()
     {
-        $courses = (new CourseRepository)->pluckCoursesByNameAndId();
+        $courses = Course::with('subjects')->paginate(10);
 
         $subjects =  Subject::pluck('name', 'id');
 
-        return (view('teacher.create.teacherCreate', compact('courses', 'subjects')));
+        return (view('teacher.create.teacherCreate', compact('courses')));
     }
 
     /*
@@ -66,17 +52,27 @@ class TeachersController extends Controller
     {
         $input = $request->validated();
 
+        $subjects = $input['subject_id']; // Array of subject IDs
+
+        unset($input['subject_id']); // Remove subject_id from input
+
         if ($input) {
-            Session::flash('success', 'The Teacher created succesfully');
+            $teacher = Teacher::create($input); // Create the teacher
 
-            $teachers =  Teacher::create($input);
+            // Attach the selected subjects to the teacher
+            $teacher->subjects()->attach($subjects);
 
-            Mail::to($teachers->email)->send(new SchoolInfo($teachers));
+            // Send email
+            Mail::to($teacher->email)->send(new SchoolInfo($teacher));
+
+            Session::flash('success', 'The Teacher created successfully');
         } else {
-            Session::flash('failure', 'The Teacher is not created succesfully');
+            Session::flash('failure', 'The Teacher was not created successfully');
         }
+
         return redirect()->route('teacher.index');
     }
+
 
     /**
      * Edit teacher
