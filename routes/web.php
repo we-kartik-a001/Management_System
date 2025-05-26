@@ -50,7 +50,8 @@ Route::prefix('student')->name('student.')->middleware('auth')->group(function (
     Route::get('/{student}/edit', [CollegeStudentsController::class, 'edit'])->name('edit');
     Route::patch('/{student}/update', [CollegeStudentsController::class, 'update'])->name('update');
     Route::delete('/{student}/delete', [CollegeStudentsController::class, 'delete'])->name('delete');
-     Route::delete('/delete', [CollegeStudentsController::class, 'multidelete'])->name('multidelete');
+    Route::delete('/delete', [CollegeStudentsController::class, 'multidelete'])->name('multidelete');
+    Route::get('/{id}/status', [CollegeStudentsController::class, 'status'])->name('status');
 });
 
 /**

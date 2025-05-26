@@ -76,11 +76,11 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Instructor(s)</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Record Creator</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status</th>
+                                    Created BY</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -155,6 +155,12 @@
                                                 </button>
                                             </form>
                                         </div>
+                                    </td>
+                                    <td class="px-5">
+                                        <a href="{{ route('student.status', $student->id) }}"
+                                            class="text-white font-semibold p-2 rounded-lg text-xs {{ $teacher->status ? 'bg-blue-400 hover:bg-blue-500' : 'bg-gray-400 hover:bg-gray-500' }}">
+                                            {{ $student->status ? 'Active' : 'Inactive' }}
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -172,4 +172,23 @@ class CollegeStudentsController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Selected students deleted successfully!']);
     }
+
+    public function status(CollegeStudent $id)
+    {
+        $collegeStudent = $id;
+
+        if($collegeStudent)
+        {
+            if($collegeStudent->status)
+            {
+                $collegeStudent->status=0;
+            }else{
+                $collegeStudent->status=1;
+            }
+
+            $collegeStudent->save();
+        }
+
+        return back(); 
+    }
 }

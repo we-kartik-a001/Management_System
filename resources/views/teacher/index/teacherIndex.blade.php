@@ -158,10 +158,12 @@
                                             </form>
                                         </div>
                                     </td>
-                                    <td>
-                                        <a href="{{ route('teacher.status', $teacher->id) }}" class="{{ $teacher->status ? 'color-red-400': 'color-blue:400' }}">
-                                            {{ $teacher->status ? 'Enable': 'Disable' }}
+                                    <td class="px-6">
+                                        <a href="{{ route('teacher.status', $teacher->id) }}"
+                                            class="text-white font-semibold p-2 rounded-lg text-xs {{ $teacher->status ? 'bg-blue-400 hover:bg-blue-500' : 'bg-gray-400 hover:bg-gray-500' }}">
+                                            {{ $teacher->status ? 'Disable' : 'Enable' }}
                                         </a>
+
                                     </td>
                                 </tr>
                             @endforeach
