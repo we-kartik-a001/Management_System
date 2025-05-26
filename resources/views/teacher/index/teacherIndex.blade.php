@@ -21,13 +21,18 @@
                             options</p>
                     </div>
                     <div class="mt-4 sm:mt-0 flex space-x-3">
+                        <div>
+                            <button type="button" id="deleteAllBtn"
+                                class="bg-red-600 font-semibold text-sm hover:bg-red-700 text-white p-2 rounded-md">
+                                Delete Selected
+                            </button>
+                        </div>
                         <a href="{{ route('teacher.create') }}"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                    clip-rule="evenodd" />
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                             </svg>
                             Add Teacher
                         </a>
@@ -50,16 +55,16 @@
                 <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Teaching Staff</h3>
-                        <div class="mt-3 sm:mt-0 relative rounded-md shadow-sm">
-                            {{-- <input type="text" name="search" id="search" class="block w-full pr-10 sm:text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Search teachers..."> --}}
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                        <div class="mt-3 sm:mt-0">
+                            <form method="GET" action="{{ route('teacher.index') }}" class="flex gap-2">
+                                <input type="text" name="search" value="{{ old('search', $search ?? '') }}"
+                                    placeholder="Search"
+                                    class="w-full border px-4 py-1 rounded-lg text-black focus:outline-none" />
+                                <button type="submit"
+                                    class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-1 rounded-lg">Search</button>
+                                <a href="{{ route('teacher.index', ['reset' => true]) }}"
+                                    class="bg-gray-800 hover:bg-gray-600 text-white px-4 py-1 rounded-lg">Reset</a>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -69,32 +74,42 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ID</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Name</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Dob</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Course</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Created By</th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions</th>
+                                <th
+                                    class="px-6 text-center  py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Name
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Dob
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Course
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Created By
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($teachers as $teacher)
                                 <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ $teacher->id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 text-center">
+                                        <input type="checkbox" class="teacher-checkbox" name="ids[]"
+                                            value="{{ $teacher->id }}">
+                                    </td>
+                                    <td class="px-6 py-4">{{ $teacher->id }}</td>
+                                    <td class="px-6 py-4">
                                         <div class="flex items-center">
                                             <div
                                                 class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
@@ -108,45 +123,45 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $teacher->date_of_birth }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 text-sm text-gray-500">{{ $teacher->date_of_birth }}</td>
+                                    <td class="px-6 py-4">
                                         <span
                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $teacher->courses ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                        {{ $teacher->courses ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                             {{ $teacher->courses->name ?? 'Not assigned' }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $teacher->creator->name ?? 'System' }}
+                                    <td class="px-6 py-4 text-sm text-gray-500">{{ $teacher->creator->name ?? 'System' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <td class="px-6 py-1 text-right">
                                         <div class="flex justify-end space-x-2">
                                             <a href="{{ route('teacher.edit', $teacher->id) }}"
-                                                class="text-indigo-600 hover:text-indigo-900 mr-3 inline-flex items-center">
-                                                <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path
-                                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                                </svg>
-                                                Edit
-                                            </a>
+                                                class="text-indigo-600 hover:text-indigo-900"><svg class="w-5 h-5"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg></a>
                                             <form action="{{ route('teacher.delete', $teacher->id) }}" method="POST"
-                                                class="inline"
                                                 onsubmit="return confirm('Are you sure you want to delete this teacher?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    class="text-red-600 hover:text-red-900 inline-flex items-center">
-                                                    <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fill-rule="evenodd"
-                                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                    Delete
-                                                </button>
+                                                <button type="submit" class="text-red-600 hover:text-red-900"> <svg
+                                                        class="w-5 h-5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                        </path>
+                                                    </svg></button>
                                             </form>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('teacher.status', $teacher->id) }}" class="{{ $teacher->status ? 'color-red-400': 'color-blue:400' }}">
+                                            {{ $teacher->status ? 'Enable': 'Disable' }}
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -161,57 +176,48 @@
             </div>
         </div>
 
-        <!-- Floating Action Button for Mobile -->
-        <div class="fixed bottom-6 right-6 md:hidden">
-            <a href="{{ route('teacher.create') }}"
-                class="flex items-center justify-center p-3 rounded-full shadow-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-200">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-            </a>
-        </div>
+        <!-- JS -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#selectAll').on('change', function() {
+                    $('.teacher-checkbox').prop('checked', $(this).prop('checked'));
+                });
 
-        <style>
-            /* Enhanced table row hover effect */
-            tbody tr {
-                transition: background-color 0.15s ease-in-out;
-            }
+                $('#deleteAllBtn').click(function() {
+                    let selectedIds = [];
+                    $('.teacher-checkbox:checked').each(function() {
+                        selectedIds.push($(this).val());
+                    });
 
-            /* Custom pagination styling */
-            .pagination {
-                display: flex;
-                padding-left: 0;
-                list-style: none;
-                border-radius: 0.25rem;
-            }
+                    if (selectedIds.length === 0) {
+                        alert('Please select at least one teacher to delete.');
+                        return;
+                    }
 
-            .page-item.active .page-link {
-                z-index: 3;
-                color: #fff;
-                background-color: #4f46e5;
-                border-color: #4f46e5;
-            }
+                    if (!confirm('Are you sure you want to delete the selected teachers?')) {
+                        return;
+                    }
 
-            .page-link {
-                position: relative;
-                display: block;
-                padding: 0.5rem 0.75rem;
-                margin-left: -1px;
-                line-height: 1.25;
-                color: #4f46e5;
-                background-color: #fff;
-                border: 1px solid #d1d5db;
-            }
+                    $.ajax({
+                        url: '{{ route('teacher.multidelete') }}',
+                        type: 'DELETE',
+                        data: {
+                            ids: selectedIds,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            alert(response.message);
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred while deleting the teachers.');
+                        }
+                    });
+                });
+            });
+        </script>
 
-            .page-link:hover {
-                z-index: 2;
-                color: #3730a3;
-                text-decoration: none;
-                background-color: #f3f4f6;
-                border-color: #d1d5db;
-            }
-        </style>
     </body>
 
 @endsection

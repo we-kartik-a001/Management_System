@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 // Models 
 use App\Models\Teacher;
 use App\Models\Subject;
+use App\Models\Course;
 
 // Request 
+use Illuminate\Http\Request;
 use App\Http\Requests\TeacherStoreRequest;
 
 // Repository
@@ -17,8 +19,6 @@ use Illuminate\Support\Facades\Session;
 
 // Mail
 use App\Mail\SchoolInfo;
-use App\Models\Course;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class TeachersController extends Controller
@@ -26,9 +26,23 @@ class TeachersController extends Controller
     /**
      * Display the number of teachers 
      */
-    public function index()
+    public function index(Request $request)
     {
-        $teachers = Teacher::with('courses', 'creator')->paginate(10);
+        if ($request->has('search')) {
+            Session::put('teacher_search', $request->input('search'));
+        } elseif ($request->has('reset')) {
+            Session::forget('teacher_search');
+        }
+
+        $search = Session::get('teacher_search');
+
+        $teachers = Teacher::with('courses', 'creator')->when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })->paginate(10);
+
+        if (!$search) {
+            Session::flash('success', 'Students details are fetched successfully');
+        }
 
         return view('teacher.index.teacherIndex', compact('teachers'));
     }
@@ -38,7 +52,7 @@ class TeachersController extends Controller
      */
     public function create()
     {
-        $courses = Course::with('subjects')->paginate(10);
+        $courses = Course::with('subjects')->get();
 
         $subjects =  Subject::pluck('name', 'id');
 
@@ -63,7 +77,7 @@ class TeachersController extends Controller
             $teacher->subjects()->attach($subjects);
 
             // Send email
-            Mail::to($teacher->email)->send(new SchoolInfo($teacher));
+            Mail::to($teacher->email)->queue(new SchoolInfo($teacher));
 
             Session::flash('success', 'The Teacher created successfully');
         } else {
@@ -73,7 +87,6 @@ class TeachersController extends Controller
         return redirect()->route('teacher.index');
     }
 
-
     /**
      * Edit teacher
      */
@@ -81,9 +94,9 @@ class TeachersController extends Controller
     {
         $courses = (new CourseRepository)->pluckCoursesByNameAndId();
 
-        // dd($teacher->date_of_birth);
+        $subjects = Subject::pluck('name', 'id');
 
-        return view('teacher.edit.teacherEdit', compact('teacher', 'courses'));
+        return view('teacher.edit.teacherEdit', compact('teacher', 'courses', 'subjects'));
     }
 
     /**
@@ -93,10 +106,18 @@ class TeachersController extends Controller
     {
         $update = $request->validated();
 
+        $subjects = $update['subject_id']; // Array of subject IDs
+
+        unset($update['subject_id']); // Remove subject_id from input
+
         if ($update) {
             Session::flash('success', 'The Teacher has been updated succesfully');
 
             $teacher->update($update);
+
+            $teacher->subjects()->detach();
+
+            $teacher->subjects()->attach($subjects);
         } else {
             Session::flash('failure', 'There is a problem in updating the student');
         }
@@ -114,5 +135,36 @@ class TeachersController extends Controller
         $teacher->delete();
 
         return redirect(route('teacher.index'));
+    }
+
+    public function multidelete(Request $request)
+    {
+        $ids = $request->ids;
+
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json(['error' => 'No IDs provided.'], 400);
+        }
+
+        Teacher::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Selected teachers deleted successfully!']);
+    }
+
+    public function status(Teacher $id)
+    {
+        $teacher = $id;
+        if($teacher)
+        {
+            if($teacher->status)
+            {
+                $teacher->status = 0;
+            }else
+            {
+                $teacher->status =1;
+            }
+            $teacher->save();
+        }
+
+        return back();
     }
 }

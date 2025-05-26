@@ -14,7 +14,8 @@ class Teacher extends Model
         'email',
         'date_of_birth',
         'courses_id',
-        'created_by'
+        'created_by',
+        'status'
     ];
 
     // Each student belongs to particiular one course
@@ -26,7 +27,7 @@ class Teacher extends Model
     // Many teacher belongs to many college student
     public function collegeStudents()
     {
-        return $this->belongsToMany(CollegeStudent::class, 'student_teachers', 'teachers_id', 'college_student_id');
+        return $this->belongsToMany(CollegeStudent::class, 'student_teachers', 'teachers_id', 'college_student_id')->withTimestamps();
     }
 
     // User which created the teacher

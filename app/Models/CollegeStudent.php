@@ -23,7 +23,7 @@ class CollegeStudent extends Model
     // Many teacher belongs to many college student
     public function teachers()
     {
-        return $this->belongsToMany(Teacher::class,'student_teachers','college_student_id','teachers_id');
+        return $this->belongsToMany(Teacher::class,'student_teachers','college_student_id','teachers_id')->withTimestamps();
     }
 
     public function creator()

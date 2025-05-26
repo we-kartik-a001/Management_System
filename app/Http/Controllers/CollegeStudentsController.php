@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\CollegeStudent;
 
 //Request
+use Illuminate\Http\Request;
 use App\Http\Requests\CollegeStudentRequest;
 
 //Repository
@@ -20,12 +21,22 @@ class CollegeStudentsController extends Controller
     /**
      * Show students 
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = CollegeStudent::with('teachers', 'course', 'creator')->paginate(10);
+        if ($request->has('search')) {
+            Session::put('student_search', $request->input('search'));
+        } elseif ($request->has('reset')) {
+            Session::forget('student_search');
+        }
+    
+        $search = Session::get('student_search');
+    
+        $students = CollegeStudent::when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })->paginate(10);
+    
 
         if ($students) {
-
             return (view('student.index.studentIndex', compact('students')));
         } else {
             Session::flash('failure', 'There is some problem in fetching student data');
@@ -147,5 +158,18 @@ class CollegeStudentsController extends Controller
         $student->save();
 
         return back()->with('success', 'Course Deleted from the student.');
+    }
+
+    public function multidelete(Request $request)
+    {
+        $ids = $request->ids;
+
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json(['error' => 'No IDs provided.'], 400);
+        }
+
+        CollegeStudent::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Selected students deleted successfully!']);
     }
 }
