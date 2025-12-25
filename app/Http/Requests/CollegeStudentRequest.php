@@ -2,9 +2,13 @@
 
 namespace App\Http\Requests;
 
+// Model
+use App\Models\Course;
+use App\Models\Teacher;
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class StudentRequest extends FormRequest
+class CollegeStudentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +27,9 @@ class StudentRequest extends FormRequest
     {
         return [
             'name'=> ['required','string','max:255'],
-            'age'=>['required','integer','max:40'],
-            'teacher_name'=> ['required','string','max:255'],
+            'courses_id' => ['required', 'integer','exists:' . Course::class . ',id'],
+            'teachers_id' => ['required', 'array'],
+            'teachers_id.*' => ['exists:' . Teacher::class . ',id'],
         ];
     }
 }

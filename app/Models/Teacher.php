@@ -11,7 +11,46 @@ class Teacher extends Model
 
     protected $fillable = [
         'name',
-        'age',
-        'courses_id'
+        'email',
+        'date_of_birth',
+        'courses_id',
+        'created_by',
+        'status'
     ];
+
+    // Each student belongs to particiular one course
+    public function courses()
+    {
+        return $this->belongsTo(Course::class, 'courses_id');
+    }
+
+    // Many teacher belongs to many college student
+    public function collegeStudents()
+    {
+        return $this->belongsToMany(CollegeStudent::class, 'student_teachers', 'teachers_id', 'college_student_id')->withTimestamps();
+    }
+
+    // User which created the teacher
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    // mutator
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucwords($value);
+    }
+
+    // accessor
+    public function getDateOfBirthAttribute($value)
+    {
+        return date("d-M-Y", strtotime($value));
+    }
+
+    // teacher can have multiple subjects
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'teacher_subjects', 'teacher_id', 'subject_id');
+    }
 }

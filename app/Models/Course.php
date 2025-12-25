@@ -14,4 +14,19 @@ class Course extends Model
         'description',
         'duration',
     ];
+
+    public function collegeStudent()
+    {
+        return $this->belongsTo(CollegeStudent::class);
+    }
+
+    public function teacher()
+    {
+        return $this->belongsto(Teacher::class);
+    }
+
+     public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'courses_subjects', 'course_id', 'subject_id');
+    }
 }

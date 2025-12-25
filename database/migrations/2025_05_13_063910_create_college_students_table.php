@@ -14,18 +14,12 @@ return new class extends Migration
         Schema::create('college_students', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('teachers_id')->nullable();
             $table->unsignedBigInteger('courses_id')->nullable();
             $table->timestamps();
 
             /**
              * foreign key implementation 
              */
-            $table->foreign('teachers_id')
-                  ->references('id')
-                  ->on('teachers')
-                  ->onDelete('set null');
-
             $table->foreign('courses_id')
                   ->references('id')
                   ->on('courses')
